@@ -37,6 +37,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'courses',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -52,10 +53,11 @@ MIDDLEWARE_CLASSES = (
 
 ROOT_URLCONF = 'mooc.urls'
 
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -110,10 +112,7 @@ STATICFILES_DIRS = (
 
 STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), "static", "static_root")
 
-TEMPLATE_DIRS = (
-    os.path.join(BASE_DIR, "templates"),
-)
-
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), "static", "media")
+PROTECTED_ROOT = os.path.join(os.path.dirname(BASE_DIR), "static", "protected")
