@@ -21,14 +21,14 @@ class Organization(models.Model):
 class Certificate(models.Model):
 	title = models.CharField(max_length=120)
 	date = models.DateField()
-	line_no = models.IntegerField(max_length=120)
+	line_no = models.IntegerField()
 	description = models.TextField()
 	created_at = models.DateTimeField(auto_now_add=True, auto_now=False, null=True)
 	updated_at = models.DateTimeField(auto_now_add=False, auto_now=True, null=True)
 
 	def __str__(self):
 		return self.title
-# Create your models here.
+		
 class Course(models.Model):
 	organization = models.ForeignKey(Organization, null=True)
 	certificate = models.OneToOneField(Certificate, blank=True, null=True)
@@ -83,19 +83,7 @@ class Syllabus(models.Model):
 	def __str__(self):
 		return self.title
 
-class Video(models.Model):
-	syllabus = models.ForeignKey(Syllabus)
-	title = models.CharField(max_length=120)
-	embed_code = models.CharField(max_length=500, null=True, blank=True)
-	slug = models.SlugField(max_length=120)
-	description = models.TextField()
-	video_duration = models.DurationField(null=True, blank=True)
-	featured = models.BooleanField(default=False)
-	created_at = models.DateTimeField(auto_now_add=True, auto_now=False, null=True)
-	updated_at = models.DateTimeField(auto_now_add=False, auto_now=True, null=True)
 
-	def __str__(self):
-		return self.title
 
 
 class Lecturer(models.Model):
@@ -107,33 +95,6 @@ class Lecturer(models.Model):
 	def __str__(self):
 		return self.name
 
-
-
-
-
-class Enrollment(models.Model):
-	#user
-	course = models.ForeignKey(Course)
-	enrollment_start = models.DateTimeField(auto_now_add=True, auto_now=False, null=True)
-	enrollment_end = models.DateTimeField(auto_now_add=True, auto_now=False, null=True)
-	created_at = models.DateTimeField(auto_now_add=True, auto_now=False, null=True)
-	updated_at = models.DateTimeField(auto_now_add=False, auto_now=True, null=True)
-
-	def __str__(self):
-		return self.title
-
-
-class Review(models.Model):
-	#user
-	course = models.ForeignKey(Course)
-	rating = models.IntegerField(null=True, blank=True)
-	testimony = models.TextField()
-	date = models.DateTimeField()
-	created_at = models.DateTimeField(auto_now_add=True, auto_now=False, null=True)
-	updated_at = models.DateTimeField(auto_now_add=False, auto_now=True, null=True)
-
-	def __str__(self):
-		return "%s" %(self.rating)
 
 
 def thumbnail_location(instance, filename):
@@ -157,7 +118,7 @@ class Thumbnail(models.Model):
 		null=True, 
 		upload_to=thumbnail_location)
 
-	def __unicode__(self): # __str__(self):
+	def __str__(self): # __str__(self):
 		return str(self.media.path)
 
 
