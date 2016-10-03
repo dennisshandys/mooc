@@ -5,6 +5,7 @@ from courses.models import Course
 class Enrollment(models.Model):
 	#user
 	course = models.ForeignKey(Course)
+	agreement_marketing_mail = models.BooleanField(default=True)
 	enrollment_start = models.DateTimeField(auto_now_add=True, auto_now=False, null=True)
 	enrollment_end = models.DateTimeField(auto_now_add=True, auto_now=False, null=True)
 	created_at = models.DateTimeField(auto_now_add=True, auto_now=False, null=True)

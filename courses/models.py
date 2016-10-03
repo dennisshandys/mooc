@@ -7,7 +7,7 @@ def download_media_location(instance, filename):
 	return "%s/%s" %(instance.slug, filename)
 
 
-class Organization(models.Model):
+class Institution(models.Model):
 	name = models.CharField(max_length=50)
 	country = models.CharField(max_length=20)
 	address = models.TextField()
@@ -30,15 +30,21 @@ class Certificate(models.Model):
 		return self.title
 		
 class Course(models.Model):
-	organization = models.ForeignKey(Organization, null=True)
+	institution = models.ForeignKey(Institution, null=True)
 	certificate = models.OneToOneField(Certificate, blank=True, null=True)
+	course_id = models.CharField(max_length=50, null=True)
 	title = models.CharField(max_length=120)
 	slug = models.SlugField(null=True, blank=True)
 	short_description = models.TextField()
 	description = models.TextField()
+	price = models.IntegerField(null=True)
+	length_course = models.IntegerField(null=True,)
+	effort = models.CharField(max_length=120, null=True)
+	video_transcript = models.CharField(max_length=120, null=True)
 	level = models.CharField(max_length=50)
 	speaking_language = models.CharField(max_length=50)
 	transcript_language =models.CharField(max_length=50)
+	subject = models.CharField(max_length=50, null=True)
 	media = models.ImageField(blank=True, 
 			null=True, 
 			upload_to=download_media_location,
@@ -52,19 +58,6 @@ class Course(models.Model):
 
 	def __str__(self):
 		return self.title
-
-
-
-
-class TaggedItem(models.Model):
-	course = models.ForeignKey(Course)
-	tag = models.CharField(max_length=20)
-	created_at = models.DateTimeField(auto_now_add=True, auto_now=False, null=True)
-	updated_at = models.DateTimeField(auto_now_add=False, auto_now=True, null=True)
-	
-
-	def __str__(self):
-		return self.tag
 
 
 class Prerequisite(models.Model):
@@ -83,18 +76,23 @@ class Syllabus(models.Model):
 	def __str__(self):
 		return self.title
 
-
-
-
 class Lecturer(models.Model):
 	course = models.ManyToManyField(Course)
 	name = models.CharField(max_length=120)
+	occupation = models.CharField(max_length=120, null=True)
+	title_degree = models.CharField(max_length=10, null=True)
 	created_at = models.DateTimeField(auto_now_add=True, auto_now=False, null=True)
 	updated_at = models.DateTimeField(auto_now_add=False, auto_now=True, null=True)
 
 	def __str__(self):
 		return self.name
 
+
+class ObjectiveCourse(models.Model):
+	course = models.ForeignKey(Course)
+	what_you_learn = models.CharField(max_length=120)
+	created_at = models.DateTimeField(auto_now_add=True, auto_now=False, null=True)
+	updated_at = models.DateTimeField(auto_now_add=False, auto_now=True, null=True)
 
 
 def thumbnail_location(instance, filename):
@@ -105,6 +103,7 @@ THUMB_CHOICES = (
 	("sd", "SD"),
 	("micro", "Micro"),
 )
+
 
 class Thumbnail(models.Model):
 	course = models.ForeignKey(Course) #instance.product.title
