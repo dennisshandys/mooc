@@ -4,7 +4,7 @@ from rest_framework.serializers import (
     SerializerMethodField
     )
 
-from courses.models import Course
+from courses.models import Course, Prerequisite
 
 
 #To Get Detail List URL
@@ -40,12 +40,13 @@ class CourseCreateUpdateSerializer(ModelSerializer):
             'updated_at',
         ]
 
-        
+
 
 class CourseListSerializer(ModelSerializer):
     institution = SerializerMethodField()
     certificate = SerializerMethodField()
     url = course_detail_url
+
     class Meta:
         model = Course
         fields = [
@@ -74,6 +75,7 @@ class CourseListSerializer(ModelSerializer):
 class CourseDetailSerializer(ModelSerializer):
     institution = SerializerMethodField()
     certificate = SerializerMethodField()
+    # prerequisite = SerializerMethodField()
     class Meta:
         model = Course
         fields = [
@@ -95,6 +97,7 @@ class CourseDetailSerializer(ModelSerializer):
             'active',
             'institution',
             'certificate',
+            # 'prerequisite',
             'created_at',
             'updated_at',
         ]
@@ -108,5 +111,12 @@ class CourseDetailSerializer(ModelSerializer):
         except:
             certificate = None
         return certificate
+
+    # def get_prerequisite(self, obj):
+    #     try:
+    #         prerequisite = obj.prerequisite_set.all()
+    #     except:
+    #         prerequisite = None
+    #     return prerequisite
 
 

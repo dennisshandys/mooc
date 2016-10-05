@@ -20,7 +20,8 @@ from django.contrib import admin
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^api/courses/', include("courses.api.urls", namespace='courses-api'))
+    url(r'^api/courses/', include("courses.api.urls", namespace='courses-api')),
+    url(r'^api/enrollments/', include("enrollments.api.urls", namespace='enrollments-api'))
 ]
 
 if settings.DEBUG:

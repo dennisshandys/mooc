@@ -30,6 +30,7 @@ class Certificate(models.Model):
 		return self.title
 		
 class Course(models.Model):
+	user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True)
 	institution = models.ForeignKey(Institution, null=True)
 	certificate = models.OneToOneField(Certificate, blank=True, null=True)
 	course_id = models.CharField(max_length=50, null=True)

@@ -60,7 +60,7 @@ MIDDLEWARE_CLASSES = (
 )
 
 ROOT_URLCONF = 'mooc.urls'
-
+AUTH_USER_MODEL = 'accounts.MyUser'
 
 TEMPLATES = [
     {
