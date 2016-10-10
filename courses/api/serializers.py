@@ -52,6 +52,8 @@ class CourseListSerializer(ModelSerializer):
         fields = [
             'url',
             'title',
+            'course_id',
+            'starting_date',
             'slug',
             'short_description',
             'price',

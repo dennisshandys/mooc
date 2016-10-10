@@ -21,7 +21,8 @@ from django.contrib import admin
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^api/courses/', include("courses.api.urls", namespace='courses-api')),
-    url(r'^api/enrollments/', include("enrollments.api.urls", namespace='enrollments-api'))
+    url(r'^api/enrollments/', include("enrollments.api.urls", namespace='enrollments-api')),
+    url(r'^api/users/', include("accounts.api.urls", namespace='users-api')),
 ]
 
 if settings.DEBUG:

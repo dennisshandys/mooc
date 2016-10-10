@@ -90,7 +90,7 @@ class CourseListAPIView(ListAPIView):
     permission_classes = [AllowAny]
 
     #Field yang ingin di filter
-    search_fields = ['title', 'description', 'institution']
+    search_fields = ['title', 'description', 'institution',]
 
     #To setting up paging pagination
     pagination_class = CoursePageNumberPagination #PageNumberPagination
@@ -109,4 +109,5 @@ class CourseListAPIView(ListAPIView):
                     Q(transcript_language__icontains=query) |
                     Q(speaking_language__icontains=query)
                     ).distinct()
+
         return queryset_list

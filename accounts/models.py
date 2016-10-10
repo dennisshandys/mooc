@@ -1,9 +1,12 @@
 from django.conf import settings
+from django.core.files.storage import FileSystemStorage
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
 from django.contrib.auth.signals import user_logged_in
 from django.db import models
 from django.db.models.signals import post_save
 
+def download_media_location(instance, filename):
+	return "%s/%s" %(instance.slug, filename)
 
 class MyUserManager(BaseUserManager):
     def create_user(self, username=None, email=None, password=None):
@@ -119,6 +122,11 @@ class MyUser(AbstractBaseUser):
 
 class UserProfile(models.Model):
 	user = models.OneToOneField(settings.AUTH_USER_MODEL, null=True)
+	slug = models.SlugField(null=True, blank=True)
+	image_profile = models.ImageField(blank=True, 
+			null=True, 
+			upload_to=download_media_location,
+			storage=FileSystemStorage(location=settings.PROTECTED_ROOT))
 	dob = models.DateField()
 	preferred_language = models.CharField(max_length=120, blank=True, null=True)
 	address = models.TextField()
@@ -145,6 +153,35 @@ class UserProfile(models.Model):
 
 	def __unicode__(self):
 		return self.user.email
+
+
+class PrivacyUserProfile(models.Model):
+	user = models.OneToOneField(settings.AUTH_USER_MODEL, null=True)
+	is_dob = models.BooleanField(default=False)
+	is_preferred_language = models.BooleanField(default=False)
+	is_address = models.BooleanField(default=False)
+	is_city = models.BooleanField(default=False)
+	is_country = models.BooleanField(default=False)
+	is_zip_code = models.BooleanField(default=False)
+	is_interest = models.BooleanField(default=False)
+	is_title = models.BooleanField(default=False)
+	is_organization = models.BooleanField(default=False)
+	is_email = models.BooleanField(default=False)
+	is_phone = models.BooleanField(default=False)
+	is_website = models.BooleanField(default=False)
+	is_about_me = models.BooleanField(default=False)
+
+	is_private_message = models.BooleanField(default=False)
+	is_notif_assesment = models.BooleanField(default=False)
+	is_notif_pm = models.BooleanField(default=False)
+	is_user_profile = models.BooleanField(default=False)
+
+	is_facebook_link = models.BooleanField(default=False)
+	is_twitter_handle = models.BooleanField(default=False)	
+
+
+	def __unicode__(self):
+		return self.user.username
 
 
 

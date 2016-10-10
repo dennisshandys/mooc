@@ -39,6 +39,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     #third party
     'rest_framework',
+    'corsheaders',
 
     #local apps
     'accounts',
@@ -49,6 +50,7 @@ INSTALLED_APPS = (
 )
 
 MIDDLEWARE_CLASSES = (
+    'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -105,7 +107,26 @@ USE_L10N = True
 
 USE_TZ = True
 
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+        
+    ),
+    # 'DEFAULT_PARSER_CLASSES': (
+    #     'rest_framework.parsers.JSONParser',
+    # ),
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+         'rest_framework.authentication.SessionAuthentication',
+         #'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        #'rest_framework.authentication.BasicAuthentication'
 
+    ), 
+    "DEFAULT_PERMISSION_CLASSES": (
+        'rest_framework.permissions.IsAuthenticated',
+        #'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+    )
+}
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
@@ -124,3 +145,25 @@ STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), "static", "static_root")
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), "static", "media")
 PROTECTED_ROOT = os.path.join(os.path.dirname(BASE_DIR), "static", "protected")
+
+CORS_ORIGIN_ALLOW_ALL = True
+
+CORS_ALLOW_METHODS = (
+    'GET',
+    'POST',
+    'PUT',
+    'PATCH',
+    'DELETE',
+    'OPTIONS',
+)
+
+CORS_ALLOW_HEADERS = (
+    'x-requested-with',
+    'content-type',
+    'accept',
+    'origin',
+    'authorization',
+    'x-csrftoken',
+    'user-agent',
+    'accept-encoding',
+)
