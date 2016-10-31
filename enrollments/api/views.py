@@ -47,10 +47,10 @@ class EnrollmentListAPIView(ListAPIView):
 
     #Filter Option in List API
     filter_backends= [SearchFilter, OrderingFilter]
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
     #Field yang ingin di filter
-    search_fields = ['enrollment_end', 'enrollment_start', 'course']
+    search_fields = ['enrollment_end', 'enrollment_start', 'course__title__icontains']
 
     #To setting up paging pagination
     pagination_class = EnrollmentPageNumberPagination #PageNumberPagination

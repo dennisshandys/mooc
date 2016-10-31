@@ -57,3 +57,44 @@ class EnrollmentDetailSerializer(ModelSerializer):
 
 
 
+
+# class CourseEnrollmentSerializer(ModelSerializer):
+#     course = CharField(read_only=True)
+#     user = EmailField(read_only=True)
+#     enrollment_start = CharField(read_only=True)
+#     enrollment_end = CharField(allow_blank=True, read_only=True)
+#     class Meta:
+#         model = Enrollment
+#         fields = [
+#             'course',
+#             'user',
+#             'enrollment_start',
+#             'enrollment_end',
+            
+#         ]
+        
+#     def validate(self, data):
+#         user_obj = None
+#         email = data.get("email")
+#         password = data.get("password")
+#         if not email and not password:
+#             raise ValidationError("An Email and Password is required to login.")
+#         user = MyUser.objects.filter(email=email).distinct()
+#         username = user.first().username
+#         user = user.exclude(email__isnull=True).exclude(email__iexact='')
+#         if user.exists() and user.count()==1:
+#             user_obj = user.first()
+            
+
+#         else:
+#             raise ValidationError("This email is not valid")
+
+#         if user_obj:
+#             if not user_obj.check_password(password):
+#                 raise ValidationError("Incorrect credentials, please try again")
+#         data["token"] = "SOME RANDOM TOKEN"
+#         data["username"] = username
+#         return data
+
+
+

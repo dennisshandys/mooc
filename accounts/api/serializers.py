@@ -1,3 +1,5 @@
+import datetime
+import requests
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 
@@ -12,7 +14,9 @@ from rest_framework.serializers import (
     ValidationError
     )
 
-from accounts.models import MyUser
+from accounts.models import (MyUser, UserProfile,
+    )
+from rooms.models import CoachingCircle
 
 
 class MyUserDetailSerializer(ModelSerializer):
@@ -22,9 +26,40 @@ class MyUserDetailSerializer(ModelSerializer):
             'username',
             'email',
         ]
+class StudentListSerializer(ModelSerializer):
+    username = SerializerMethodField()
+    #member_count = SerializerMethodField()
+    class Meta:
+        model = UserProfile
+        fields = [
+            'image_profile',
+            'username',
+            'country',
+            'city',
+            #'member_count',
+        ]
 
+    def get_username(self, obj):
+        return obj.user.username
 
+    # def get_member_count(self, obj):
+    #     members = CoachingCircle.objects.filter(user=obj.user).count()
+    #     return members
 
+class UserProfileListSerializer(ModelSerializer):
+    user = MyUserDetailSerializer(read_only=True)
+    current_time = SerializerMethodField()
+    class Meta:
+        model = UserProfile
+        fields = [
+            'user',
+            'country',
+            'current_time',
+            'preferred_language',
+        ]
+
+    def get_current_time(self, obj):
+        return datetime.datetime.now()
 
 class MyUserCreateSerializer(ModelSerializer):
     password = CharField(label='Password', 
@@ -90,14 +125,18 @@ class MyUserCreateSerializer(ModelSerializer):
 
 
 
+#products_url = base_url + "products/"
+
 class MyUserLoginSerializer(ModelSerializer):
     token = CharField(allow_blank=True, read_only=True)
     email = EmailField(label='Email Address')
     password = CharField(label='Password', 
         style={'input_type': 'password'})
+    username = CharField(label="Username", allow_blank=True, read_only=True)
     class Meta:
         model = MyUser
         fields = [
+            'username',
             'email',
             'password',
             'token',
@@ -110,19 +149,22 @@ class MyUserLoginSerializer(ModelSerializer):
         user_obj = None
         email = data.get("email")
         password = data.get("password")
+        token = data.get("token")
         if not email and not password:
             raise ValidationError("An Email and Password is required to login.")
         user = MyUser.objects.filter(email=email).distinct()
+        username = user.first().username
         user = user.exclude(email__isnull=True).exclude(email__iexact='')
         if user.exists() and user.count()==1:
             user_obj = user.first()
+            
         else:
             raise ValidationError("This email is not valid")
 
         if user_obj:
             if not user_obj.check_password(password):
                 raise ValidationError("Incorrect credentials, please try again")
-        data["token"] = "SOME RANDOM TOKEN"
+        data["username"] = username
         return data
 
 

@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+import datetime
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -40,12 +41,15 @@ INSTALLED_APPS = (
     #third party
     'rest_framework',
     'corsheaders',
+    'smuggler',
 
     #local apps
     'accounts',
     'courses',
+    'communities',
     'enrollments',
     'reviews',
+    'rooms',
     'videos',
 )
 
@@ -108,24 +112,24 @@ USE_L10N = True
 USE_TZ = True
 
 REST_FRAMEWORK = {
-    'DEFAULT_RENDERER_CLASSES': (
-        'rest_framework.renderers.JSONRenderer',
-        'rest_framework.renderers.BrowsableAPIRenderer',
-        
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.AllowAny',
     ),
-    # 'DEFAULT_PARSER_CLASSES': (
-    #     'rest_framework.parsers.JSONParser',
-    # ),
-    "DEFAULT_AUTHENTICATION_CLASSES": (
-         'rest_framework.authentication.SessionAuthentication',
-         #'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
-        #'rest_framework.authentication.BasicAuthentication'
+      'DEFAULT_AUTHENTICATION_CLASSES': (
+        #'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        "rest_framework_jwt.authentication.JSONWebTokenAuthentication",
+    ),
+      # 'DEFAULT_PAGINATION_CLASS': 'products.pagination.ProductPagination',
+      # #Change search param to "q" not ?"search"
+      # "SEARCH_PARAM" : "q"
+}
 
-    ), 
-    "DEFAULT_PERMISSION_CLASSES": (
-        'rest_framework.permissions.IsAuthenticated',
-        #'rest_framework.permissions.IsAuthenticatedOrReadOnly',
-    )
+JWT_AUTH = {
+    "JWT_RESPONSE_PAYLOAD_HANDLER": 
+            "mooc.utils.jwt_response_payload_handler",
+    "JWT_EXPIRATION_DELTA": datetime.timedelta(seconds=30000),
+    "JWT_ALLOW_REFRESH": True, #False
 }
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
@@ -142,7 +146,7 @@ STATICFILES_DIRS = (
 STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), "static", "static_root")
 
 
-MEDIA_URL = '/media/'
+MEDIA_URL = '/protected/'
 MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), "static", "media")
 PROTECTED_ROOT = os.path.join(os.path.dirname(BASE_DIR), "static", "protected")
 

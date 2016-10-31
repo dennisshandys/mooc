@@ -5,6 +5,8 @@ from django.contrib.auth.signals import user_logged_in
 from django.db import models
 from django.db.models.signals import post_save
 
+from communities.models import Hub
+
 def download_media_location(instance, filename):
 	return "%s/%s" %(instance.slug, filename)
 
@@ -43,6 +45,8 @@ class MyUserManager(BaseUserManager):
         return user
 
 
+
+
 class MyUser(AbstractBaseUser):
 	username = models.CharField(
 	    max_length=255,
@@ -67,6 +71,7 @@ class MyUser(AbstractBaseUser):
 					verbose_name='Is Paid Member')
 	is_active = models.BooleanField(default=True)
 	is_admin = models.BooleanField(default=False)
+	
 
 	objects = MyUserManager()
 
@@ -122,6 +127,8 @@ class MyUser(AbstractBaseUser):
 
 class UserProfile(models.Model):
 	user = models.OneToOneField(settings.AUTH_USER_MODEL, null=True)
+	hub = models.ManyToManyField(Hub)
+
 	slug = models.SlugField(null=True, blank=True)
 	image_profile = models.ImageField(blank=True, 
 			null=True, 
@@ -151,7 +158,7 @@ class UserProfile(models.Model):
 		verbose_name='Twitter handle')		
 
 
-	def __unicode__(self):
+	def __str__(self):
 		return self.user.email
 
 

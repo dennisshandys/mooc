@@ -19,12 +19,20 @@ from django.conf.urls.static import static
 from django.contrib import admin
 
 urlpatterns = [
+    url(r'^admin/', include('smuggler.urls')),
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^api/auth/token/$', 'rest_framework_jwt.views.obtain_jwt_token', name='auth_login_api'),
+    url(r'^api/auth/token/refresh/$', 'rest_framework_jwt.views.refresh_jwt_token', name='refresh_token_api'),
     url(r'^api/courses/', include("courses.api.urls", namespace='courses-api')),
+    url(r'^api/communities/', include("communities.api.urls", namespace='communities-api')),
     url(r'^api/enrollments/', include("enrollments.api.urls", namespace='enrollments-api')),
+    url(r'^api/reviews/', include("reviews.api.urls", namespace='reviews-api')),
+    url(r'^api/rooms/', include("rooms.api.urls", namespace='rooms-api')),
+    url(r'^api/auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^api/users/', include("accounts.api.urls", namespace='users-api')),
+    url(r'^courses/', include("courses.urls", namespace='courses')),
 ]
 
 if settings.DEBUG:
-	urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) 
-	urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) 
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) 
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.PROTECTED_ROOT) 
